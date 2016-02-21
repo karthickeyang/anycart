@@ -13,3 +13,13 @@ if(!empty($_POST["country_id"])) {
 	}
 }
 ?>
+<?php
+require_once('db.php');
+
+$sql = "SELECT email FROM register WHERE email = " .$_POST['email'];
+$row=$conn->query($sql);
+if (mysqli_num_rows > 0) {
+    echo "exist";
+
+}else echo 'notexist';
+?>

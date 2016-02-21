@@ -11,6 +11,8 @@ if(isset($_SESSION['email']))
 include_once("db.php");
 if(isset($_POST['submit']))
 {
+	$target_file = "image/". $_FILES["pic"]["name"];
+	move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file);
 	$fname=$_POST['fname'];
 	$lname=$_POST['lname'];
 	$email=$_POST['email'];
@@ -25,9 +27,9 @@ if(isset($_POST['submit']))
 	$state=$_POST['state'];
 	$password=$_POST['pass1'];
 	
-	
-$sql = "INSERT INTO Register (`id`, `fname`, `lname`, `email`, `telephone`, `fax`, `company`, `address1`, `address2`, `city`, `postal_code`, `country`, `region/state`, `password`) 
-VALUES ('','$fname', '$lname', '$email','$telephone','$fax','$company','$address1','$address2','$city','$post_code','$country','$state','$password')";
+	echo $target_file;
+$sql = "INSERT INTO Register (`id`, `fname`, `lname`, `email`, `telephone`, `fax`, `company`, `address1`, `address2`, `city`, `postal_code`, `country`, `region/state`, `password`,`pic_path`) 
+VALUES ('','$fname', '$lname', '$email','$telephone','$fax','$company','$address1','$address2','$city','$post_code','$country','$state','$password','$target_file')";
 $conn->query($sql);
 
 }
@@ -55,7 +57,7 @@ $conn->query($sql);
 <h1>Register Account</h1><hr>
 <!-- <p>If you already have an account with us, please login at the login page.</p> -->
 <h4>Your Personal Details</h4>
-  <form data-toggle="validator" role="form" class="form-horizontal" method="post" name="register" action="<?php  ?>">
+  <form data-toggle="validator" role="form" class="form-horizontal" method="post" name="register" action="<?php  ?>" enctype="multipart/form-data">
   <div class="form-group">
       <label class="col-sm-2 control-label " for="FirstName" >FirstName:</label>
 	  <div class="col-sm-10">
@@ -67,6 +69,12 @@ $conn->query($sql);
 	  <div class="col-sm-10">
 		<input type="text" name="lname" class="form-control" placeholder="Enter LastName" required>
 	  </div>
+    </div>
+    <div class="form-group">
+    <label class="col-sm-2 control-label" for="file-upload">Upload Picture:</label>
+    <div class="col-sm-10">	
+    <input type="file" name="pic"> 
+    </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="email">Email:</label>
@@ -149,33 +157,7 @@ $conn->query($sql);
 	  </div>
     </div>  
 	
-	<!--
-		<div class="form-group">
-      <label class="col-sm-2 control-label" for="Fax">Country</label>
-	  <div class="col-sm-10">
-		<!-- <input type="text" name="country" class="form-control" id="email" placeholder="Enter Country Name"> 
-		  <select class="form-control" id="sel1" name="country" required>
-				<option value="india">india</option>
-				<option value="pakistan">pakistan</option>
-				<option value="america">america</option>
-				<option value="sri lanka">sri lanka</option>
-  </select>
-		
-	  </div>
-    </div>
-	<div class="form-group">
-      <label class="col-sm-2 control-label" for="Fax">State</label>
-	  <div class="col-sm-10">
-		<!-- <input type="text" name="state" class="form-control" id="email" placeholder="Enter State"> 
-		<select class="form-control" name="state" required>
-		   <option></option>
-				<option value="tamilnadu">taminadu</option>
-				<option value="delhi">delhi</option>
-				<option value="karnataka">karnataka</option>
-		</select>
-	  </div>
-    </div>
--->	
+	
 <h3>Your Password</h3>
 
   <div class="form-group">
@@ -229,4 +211,18 @@ function selectCountry(val) {
 $("#search-box").val(val);
 $("#suggesstion-box").hide();
 }
+</script>
+<script type="text/javascript">
+function validate({
+      rules: {
+        email: {
+          required: true,
+          email: true,
+          remote: "get-state.php"
+        }
+      },
+      messages:{
+         email:'Email address exists.'
+     }
+    });
 </script>
