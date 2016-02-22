@@ -1,3 +1,4 @@
+// added class to construct
 <?php
 $servername = "localhost";
 $username = "root";
